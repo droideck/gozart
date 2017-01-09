@@ -20,6 +20,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Scale string
+var Key string
+
 // get-scaleCmd represents the get-scale command
 var getScaleCmd = &cobra.Command{
 	Use:   "get-scale",
@@ -32,11 +35,13 @@ gozart get-scale --scale=major --key=C
 
 If you won't give it a scale or a key, it will ask for it.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
 		fmt.Println("get-scale was called")
+		fmt.Println("Scale is", Scale)
+		fmt.Println("Key is", Key)
 	},
 }
-
 func init() {
 	RootCmd.AddCommand(getScaleCmd)
+	RootCmd.PersistentFlags().StringVar(&Scale, "scale", "Major", "Scale name")
+	RootCmd.PersistentFlags().StringVar(&Key, "key", "C", "Key name")
 }
