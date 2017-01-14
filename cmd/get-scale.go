@@ -23,18 +23,6 @@ import (
 var ScaleName string
 var Key string
 
-// TODO: Move it to distinct module
-func getScale(root *gozart.Note, intervals []int) []gozart.Note {
-	scale := make([]gozart.Note, len(intervals)+1)
-
-	scale[0] = *root
-	for i, interval := range intervals {
-		scale[i+1] = scale[i].Higher(interval)
-	}
-	return scale
-}
-
-// get-scaleCmd represents the get-scale command
 var getScaleCmd = &cobra.Command{
 	Use:   "get-scale",
 	Short: "Provides a music scale with chords that sound good",
@@ -50,8 +38,8 @@ If you won't give it a scale or a key, it will ask for it.`,
 		fmt.Println("Scale is", ScaleName)
 		fmt.Println("Key is", Key)
 		keyNote := gozart.NewNote(Key)
-		scaleIntervals := []int{2, 2, 1, 2, 2, 2}
-		fmt.Println(getScale(keyNote, scaleIntervals))
+		scale := gozart.NewScale(ScaleName, keyNote)
+		fmt.Println(scale.Notes)
 	},
 }
 
