@@ -1,5 +1,7 @@
 package gozart
 
+import "fmt"
+
 type Scale struct {
 	name string
 	key Note
@@ -8,9 +10,14 @@ type Scale struct {
 	//chords []Chord
 }
 
-// TODO: Improve the logic here, so it will give right note accidentals
-func NewScale(name string, key *Note) *Scale {
-	intervals := ScaleIntervals[name]
+var scales = map[string]func(*Note) *Scale{
+	"chromatic": chromaticScale,
+//	"major": majorScale,
+}
+
+func chromaticScale(key *Note) *Scale {
+	name := "chromatic"
+	intervals := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	notes := make([]Note, len(intervals)+1)
 
 	notes[0] = *key
@@ -21,7 +28,15 @@ func NewScale(name string, key *Note) *Scale {
 	return &Scale{
 		name: name,
 		key: *key,
-		intervals: ScaleIntervals[name],
+		intervals: intervals,
 		Notes: notes,
+	}
+}
+
+func NewScale(name string, key *Note) (*Scale, error) {
+	if scale, ok := scales[name]; ok {
+		return scale(key), nil
+	} else {
+		return nil, fmt.Errorf("Scale %s is not found", name)
 	}
 }

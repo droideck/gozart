@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"github.com/droideck/gozart/gozart"
 	"github.com/spf13/cobra"
 )
@@ -34,17 +35,24 @@ gozart get-scale --scale=major --key=C
 
 If you won't give it a scale or a key, it will ask for it.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("get-scale was called")
+		keyNote, err := gozart.NewNote(Key)
+		if err != nil {
+			log.Fatalf("Key search. %s", err)
+		}
+
+		scale, err := gozart.NewScale(ScaleName, keyNote)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		fmt.Println("Scale is", ScaleName)
 		fmt.Println("Key is", Key)
-		keyNote := gozart.NewNote(Key)
-		scale := gozart.NewScale(ScaleName, keyNote)
 		fmt.Println(scale.Notes)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(getScaleCmd)
-	RootCmd.PersistentFlags().StringVar(&ScaleName, "scale", "Major", "Scale name")
+	RootCmd.PersistentFlags().StringVar(&ScaleName, "scale", "chromatic", "Scale name")
 	RootCmd.PersistentFlags().StringVar(&Key, "key", "C", "Key name")
 }

@@ -1,13 +1,19 @@
 package gozart
 
+import "fmt"
+
 type Note struct {
 	name   string
 	number int
 	//octave int // Future
 }
 
-func NewNote(note string) *Note {
-	return &Note{name: note, number: noteToNum[note]}
+func NewNote(name string) (*Note, error) {
+	if noteNum, ok := noteToNum[name]; ok {
+		return &Note{name: name, number: noteNum}, nil
+	} else {
+		return nil, fmt.Errorf("Note %s is not found", name)
+	}
 }
 
 func (n *Note) Higher(interval int) Note {
