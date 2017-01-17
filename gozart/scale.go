@@ -12,7 +12,26 @@ type Scale struct {
 
 var scales = map[string]func(*Note) *Scale{
 	"chromatic": chromaticScale,
-//	"major": majorScale,
+	"major": majorScale,
+}
+
+func majorScale(key *Note) *Scale {
+	name := "major"
+	intervals := []int{2, 2, 1, 2, 2, 2, 1}
+	notes := make([]Note, len(intervals)+1)
+
+	notes[0] = *key
+	for i, interval := range intervals {
+		nextNote := notes[i].Higher(interval)
+		notes[i+1] = nextNote
+	}
+
+	return &Scale{
+		name: name,
+		key: *key,
+		intervals: intervals,
+		Notes: notes,
+	}
 }
 
 func chromaticScale(key *Note) *Scale {

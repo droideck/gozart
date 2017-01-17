@@ -3,23 +3,11 @@ package gozart
 import "testing"
 
 var notes = map[string]Note{
-	"C":  {name: "C", number: 0},
-	"D":  {name: "D", number: 2},
-	"E":  {name: "E", number: 4},
-	"F":  {name: "F", number: 5},
-	"G":  {name: "G", number: 7},
-	"A":  {name: "A", number: 9},
-	"B":  {name: "B", number: 11},
-	"C#": {name: "C#", number: 1},
-	"D#": {name: "D#", number: 3},
-	"F#": {name: "F#", number: 6},
-	"G#": {name: "G#", number: 8},
-	"A#": {name: "A#", number: 10},
-	"Db": {name: "Db", number: 1},
-	"Eb": {name: "Eb", number: 3},
-	"Gb": {name: "Gb", number: 6},
-	"Ab": {name: "Ab", number: 8},
-	"Bb": {name: "Bb", number: 10},
+	"A":  {fullName: "A",  note: "A", accidental: 0, number: 9},
+	"A#": {fullName: "A#", note: "A", accidental: 2, number: 10},
+	"A♯": {fullName: "A#", note: "A", accidental: 2, number: 10},
+	"Ab": {fullName: "Ab", note: "A", accidental: 1, number: 8},
+	"A♭": {fullName: "Ab", note: "A", accidental: 1, number: 8},
 }
 
 var noteA, _ = NewNote("A")
@@ -41,8 +29,9 @@ func TestNewNote(t *testing.T) {
 func TestNoteHigher(t *testing.T) {
 	for i, shiftedNote := range notesASharp {
 		higherNote := noteA.Higher(i)
-		if higherNote != notes[shiftedNote] {
-			t.Errorf("Shifted higher note %v is not %v", higherNote, notes[shiftedNote])
+		expectedNote, _ := NewNote(shiftedNote)
+		if higherNote != *expectedNote {
+			t.Errorf("Shifted higher note %v is not %v", higherNote, *expectedNote)
 		}
 	}
 }
@@ -50,8 +39,9 @@ func TestNoteHigher(t *testing.T) {
 func TestNoteLower(t *testing.T) {
 	for i, shiftedNote := range notesAFlat {
 		lowerNote := noteA.Lower(i)
-		if lowerNote != notes[shiftedNote] {
-			t.Errorf("Shifted higher note %v is not %v", lowerNote, notes[shiftedNote])
+		expectedNote, _ := NewNote(shiftedNote)
+		if lowerNote != *expectedNote {
+			t.Errorf("Shifted lower note %v is not %v", lowerNote, *expectedNote)
 		}
 	}
 }

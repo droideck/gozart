@@ -40,6 +40,7 @@ If you won't give it a scale or a key, it will ask for it.`,
 			log.Fatalf("Key search. %s", err)
 		}
 
+		fmt.Println(keyNote)
 		scale, err := gozart.NewScale(ScaleName, keyNote)
 		if err != nil {
 			log.Fatal(err)
