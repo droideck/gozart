@@ -4,34 +4,33 @@ import "fmt"
 
 type Note struct {
 	fullName string
-	note string
+	name string
 	accidental int
 	number int
 	//octave int // Future
 }
 
-func NewNote(name string) (*Note, error) {
+func resolveNoteData(fullName string) (map[string]interface{}, error) {
 	var note string
 	var accidental int
 	var accSymbol string
 
-	if len(name) == 0 {
+	if len(fullName) == 0 {
 		return nil, fmt.Errorf("Please, specify note")
 	} else {
-		note = string(name[0])
+		note = string(fullName[0])
 	}
 
-	if _, ok := mainNotes[note]; ok {
-	} else {
-		return nil, fmt.Errorf("Note %s is not found", name)
+	if _, ok := naturalNotes[note]; ! ok {
+		return nil, fmt.Errorf("Note %s is not found", fullName)
 	}
 
 	// Find out the accidentals (0 - natural, 1 - flat, 2 - sharp)
 	switch {
-	case len(name) == 1:
+	case len(fullName) == 1:
 		accidental = 0
-	case len(name) == 2:
-		switch string(name[1]) {
+	case len(fullName) == 2:
+		switch string(fullName[1]) {
 		case "b":
 			accidental = 1
 			accSymbol = "b"
@@ -39,10 +38,10 @@ func NewNote(name string) (*Note, error) {
 			accidental = 2
 			accSymbol = "#"
 		default:
-			return nil, fmt.Errorf("Wrong accidental - %s", name)
+			return nil, fmt.Errorf("Wrong accidental - %s", fullName)
 		}
-	case len(name) == 4:
-		switch string(name[1:4]) {
+	case len(fullName) == 4:
+		switch string(fullName[1:4]) {
 		case "♭":
 			accidental = 1
 			accSymbol = "b"
@@ -50,18 +49,32 @@ func NewNote(name string) (*Note, error) {
 			accidental = 2
 			accSymbol = "#"
 		default:
-			return nil, fmt.Errorf("Wrong accidental - %s", name)
+			return nil, fmt.Errorf("Wrong accidental - %s", fullName)
 		}
 	default:
-		return nil, fmt.Errorf("Wrong note name - %s", name)
+		return nil, fmt.Errorf("Wrong note name - %s", fullName)
 	}
 
-	name = fmt.Sprint(string(name[0]), accSymbol)
+	fullName = fmt.Sprint(string(fullName[0]), accSymbol)
+	data := map[string]interface{}{"name": fullName,
+	"natural": note,
+	"accidental": accidental,
+	"number": noteToNum[fullName],
+	}
+
+	return data, nil
+}
+
+func NewNote(name string) (*Note, error) {
+	data, err := resolveNoteData(name)
+	if err != nil {
+		return nil, err
+	}
 	return &Note{
-		fullName: name,
-		note: note,
-		accidental: accidental,
-		number: noteToNum[name],
+		fullName: data["name"].(string),
+		name: data["natural"].(string),
+		accidental: data["accidental"].(int),
+		number: data["number"].(int),
 	}, nil
 }
 
@@ -91,4 +104,20 @@ func (n *Note) Lower(interval int) Note {
 
 	note, _ = NewNote(nextNote)
 	return *note
+}
+
+func (n *Note) SwitchAccidental() {
+	if n.accidental != 0 {
+		fmt.Println(n, "qwe")
+		switch n.accidental {
+		case 1:
+			n.fullName = noteNamesSharp[n.number]
+		case 2:
+			n.fullName = noteNamesFlat[n.number]
+		}
+		data, _ := resolveNoteData(n.fullName)
+		n.name = data["natural"].(string)
+		n.accidental = data["accidental"].(int)
+		n.number = data["number"].(int)
+	}
 }
