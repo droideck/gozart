@@ -1,6 +1,8 @@
 package gozart
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Note struct {
 	fullName string
@@ -25,7 +27,7 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("Note %s is not found", fullName)
 	}
 
-	// Find out the accidentals (0 - natural, 1 - flat, 2 - sharp)
+	// Find out the accidentals (0 - natural, 1, 3, 5 - flats, 2, 4, 6 - sharps)
 	switch {
 	case len(fullName) == 1:
 		accidental = 0
@@ -40,6 +42,17 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 		default:
 			return nil, fmt.Errorf("Wrong accidental - %s", fullName)
 		}
+	case len(fullName) == 3:
+		switch string(fullName[1:3]) {
+		case "bb":
+			accidental = 3
+			accSymbol = "bb"
+		case "##":
+			accidental = 4
+			accSymbol = "##"
+		default:
+			return nil, fmt.Errorf("Wrong accidental - %s", fullName)
+		}
 	case len(fullName) == 4:
 		switch string(fullName[1:4]) {
 		case "♭":
@@ -48,6 +61,12 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 		case "♯":
 			accidental = 2
 			accSymbol = "#"
+		case "bbb":
+			accidental = 5
+			accSymbol = "bbb"
+		case "###":
+			accidental = 6
+			accSymbol = "###"
 		default:
 			return nil, fmt.Errorf("Wrong accidental - %s", fullName)
 		}
@@ -106,18 +125,37 @@ func (n *Note) Lower(interval int) Note {
 	return *note
 }
 
-func (n *Note) SwitchAccidental() {
-	if n.accidental != 0 {
-		fmt.Println(n, "qwe")
-		switch n.accidental {
-		case 1:
-			n.fullName = noteNamesSharp[n.number]
-		case 2:
-			n.fullName = noteNamesFlat[n.number]
-		}
-		data, _ := resolveNoteData(n.fullName)
-		n.name = data["natural"].(string)
-		n.accidental = data["accidental"].(int)
-		n.number = data["number"].(int)
+func (n *Note) switchAccidental(direction int, naturalNoteName string) {
+	var accidental int
+	if _, ok := naturalNotes[naturalNoteName]; ! ok {
+		fmt.Errorf("Note %s is not found", naturalNoteName)
 	}
+
+	if direction < 0 {
+		// Flats
+		accidental = naturalNotes[naturalNoteName] - n.number
+		if accidental < 0 {
+			accidental += 12
+		}
+		n.name = naturalNoteName
+		n.fullName = naturalNoteName
+		for i := 0; i < accidental; i ++ {
+			n.fullName += "b"
+		}
+	} else {
+		// Sharps
+		accidental = n.number - naturalNotes[naturalNoteName]
+		if accidental < 0 {
+			accidental += 12
+		}
+		n.name = naturalNoteName
+		n.fullName = naturalNoteName
+		for i := 0; i < accidental; i ++ {
+			n.fullName += "#"
+		}
+	}
+	data, _ := resolveNoteData(n.fullName)
+	n.name = data["natural"].(string)
+	n.accidental = data["accidental"].(int)
+	n.number = data["number"].(int)
 }

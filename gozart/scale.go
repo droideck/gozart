@@ -18,30 +18,35 @@ var scales = map[string]func(*Note) *Scale{
 }
 
 func majorScale(key *Note) *Scale {
+	var direction int
+	var nextNaturalNote Note
 	name := "major"
 	intervals := []int{2, 2, 1, 2, 2, 2, 1}
 	notes := fillScale(key, intervals)
 
-	// Major scale shouldn't have repeated notes
-	mainNotes := naturalNotes
-
-	// Remove all natural notes from check list
-	for _, note := range notes {
-		if note.accidental == 0 {
-			delete(mainNotes, note.fullName)
-		}
+	if key.accidental == 1 || key.fullName == "F" {
+		// Flat
+		direction = -1
+	} else {
+		// Sharp
+		direction = 0
 	}
 
-	// Work out accidental notes
-	for i := range notes {
-		if notes[i].accidental != 0 {
-			_, ok := mainNotes[notes[i].name]
-			if ok {
-				delete(mainNotes, notes[i].name)
-			} else {
-				notes[i].SwitchAccidental()
+	// Rework notes so they wouldn't repeat
+	previous, _ := NewNote(key.name)
+	for i := 1; i < len(notes); i++ {
+		nextNaturalNote = previous.Higher(1)
+		for i := 0; i < 4; i++ {
+			if nextNaturalNote.accidental != 0 || previous.name == nextNaturalNote.name {
+				nextNaturalNote = nextNaturalNote.Higher(1)
 			}
 		}
+
+		if nextNaturalNote.fullName != notes[i].name {
+			notes[i].switchAccidental(direction, nextNaturalNote.fullName)
+		}
+
+		previous, _ = NewNote(nextNaturalNote.name)
 	}
 
 	return &Scale{
