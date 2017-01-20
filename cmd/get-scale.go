@@ -16,9 +16,9 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"github.com/droideck/gozart/gozart"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 var ScaleName string

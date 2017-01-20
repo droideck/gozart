@@ -5,10 +5,10 @@ import (
 )
 
 type Note struct {
-	fullName string
-	name string
+	fullName   string
+	name       string
 	accidental int
-	number int
+	number     int
 	//octave int // Future
 }
 
@@ -23,7 +23,7 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 		note = string(fullName[0])
 	}
 
-	if _, ok := naturalNotes[note]; ! ok {
+	if _, ok := naturalNotes[note]; !ok {
 		return nil, fmt.Errorf("Note %s is not found", fullName)
 	}
 
@@ -61,6 +61,12 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 		case "♯":
 			accidental = 2
 			accSymbol = "#"
+		case "𝄫":
+			accidental = 3
+			accSymbol = "b"
+		case "𝄪":
+			accidental = 4
+			accSymbol = "#"
 		case "bbb":
 			accidental = 5
 			accSymbol = "bbb"
@@ -76,9 +82,9 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 
 	fullName = fmt.Sprint(string(fullName[0]), accSymbol)
 	data := map[string]interface{}{"name": fullName,
-	"natural": note,
-	"accidental": accidental,
-	"number": noteToNum[fullName],
+		"natural":    note,
+		"accidental": accidental,
+		"number":     noteToNum[fullName],
 	}
 
 	return data, nil
@@ -90,10 +96,10 @@ func NewNote(name string) (*Note, error) {
 		return nil, err
 	}
 	return &Note{
-		fullName: data["name"].(string),
-		name: data["natural"].(string),
+		fullName:   data["name"].(string),
+		name:       data["natural"].(string),
 		accidental: data["accidental"].(int),
-		number: data["number"].(int),
+		number:     data["number"].(int),
 	}, nil
 }
 
@@ -127,7 +133,7 @@ func (n *Note) Lower(interval int) Note {
 
 func (n *Note) switchAccidental(direction int, naturalNoteName string) {
 	var accidental int
-	if _, ok := naturalNotes[naturalNoteName]; ! ok {
+	if _, ok := naturalNotes[naturalNoteName]; !ok {
 		fmt.Errorf("Note %s is not found", naturalNoteName)
 	}
 
@@ -139,7 +145,7 @@ func (n *Note) switchAccidental(direction int, naturalNoteName string) {
 		}
 		n.name = naturalNoteName
 		n.fullName = naturalNoteName
-		for i := 0; i < accidental; i ++ {
+		for i := 0; i < accidental; i++ {
 			n.fullName += "b"
 		}
 	} else {
@@ -150,7 +156,7 @@ func (n *Note) switchAccidental(direction int, naturalNoteName string) {
 		}
 		n.name = naturalNoteName
 		n.fullName = naturalNoteName
-		for i := 0; i < accidental; i ++ {
+		for i := 0; i < accidental; i++ {
 			n.fullName += "#"
 		}
 	}

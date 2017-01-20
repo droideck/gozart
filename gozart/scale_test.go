@@ -1,13 +1,13 @@
 package gozart
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 )
 
 var scalesA = map[string]Scale{
 	"chromatic": {
-		name: "chromatic",
+		name:      "chromatic",
 		key:       Note{"A", "A", 0, 9},
 		intervals: []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		Notes: []Note{
@@ -37,7 +37,7 @@ func TestNewScaleA(t *testing.T) {
 			t.Error(err)
 		}
 
-		if ! reflect.DeepEqual(*testScale, scale) {
+		if !reflect.DeepEqual(*testScale, scale) {
 			t.Errorf("New scale %v is not %v", testScale, scale)
 		}
 	}
