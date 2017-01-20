@@ -13,11 +13,11 @@ type Scale struct {
 }
 
 var scales = map[string]func(*Note) *Scale{
-	"chromatic":         chromaticScale,
-	"major":             majorScale,
-	"naturalMinor":      naturalMinorScale,
-	"harmonicMinor":     harmonicMinorScale,
-	"melodicMinor":      melodicMinorScale,
+	"chromatic":     chromaticScale,
+	"major":         majorScale,
+	"naturalMinor":  naturalMinorScale,
+	"harmonicMinor": harmonicMinorScale,
+	"melodicMinor":  melodicMinorScale,
 }
 
 func majorScale(key *Note) *Scale {
@@ -130,11 +130,11 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 }
 
 func fillScaleNotes(key *Note, intervals []int) []Note {
-	notes := make([]Note, len(intervals) + 1)
+	notes := make([]Note, len(intervals)+1)
 
 	notes[0] = *key
 	for i, interval := range intervals {
-		notes[i + 1] = notes[i].Higher(interval)
+		notes[i+1] = notes[i].Higher(interval)
 	}
 	return notes
 }
