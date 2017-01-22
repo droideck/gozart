@@ -23,6 +23,7 @@ import (
 
 var ScaleName string
 var Key string
+var ScaleMode string
 
 var getScaleCmd = &cobra.Command{
 	Use:   "get-scale",
@@ -35,6 +36,8 @@ gozart get-scale --scale=major --key=C
 
 If you won't give it a scale or a key, it will ask for it.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		gozart.Mode = ScaleMode
+
 		keyNote, err := gozart.NewNote(Key)
 		if err != nil {
 			log.Fatalf("Key search. %s", err)
@@ -55,4 +58,5 @@ func init() {
 	RootCmd.AddCommand(getScaleCmd)
 	RootCmd.PersistentFlags().StringVar(&ScaleName, "scale", "chromatic", "Scale name")
 	RootCmd.PersistentFlags().StringVar(&Key, "key", "C", "Key name")
+	RootCmd.PersistentFlags().StringVar(&ScaleMode, "mode", "ionian", "Scale mode")
 }

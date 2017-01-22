@@ -12,17 +12,32 @@ type Scale struct {
 	//chords []Chord
 }
 
+var Mode string = "ionian"
+
+var modeIntervals = map[string][]int{
+	"ionian":     {2, 2, 1, 2, 2, 2, 1},
+	"aeolian":    {2, 1, 2, 2, 1, 2, 2},
+	"locryan":    {1, 2, 2, 1, 2, 2, 2},
+	"dorian":     {2, 1, 2, 2, 2, 1, 2},
+	"phrygian":   {1, 2, 2, 2, 1, 2, 2},
+	"lydian":     {2, 2, 2, 1, 2, 2, 1},
+	"mixolydian": {2, 2, 1, 2, 2, 1, 2},
+}
+
 var scales = map[string]func(*Note) *Scale{
-	"chromatic":     chromaticScale,
-	"major":         majorScale,
-	"naturalMinor":  naturalMinorScale,
-	"harmonicMinor": harmonicMinorScale,
-	"melodicMinor":  melodicMinorScale,
+	"chromatic":        chromaticScale,
+	"major":            majorScale,
+	"natural minor":    naturalMinorScale,
+	"harmonic minor":   harmonicMinorScale,
+	"melodic minor":    melodicMinorScale,
+	"blues":            bluesScale,
+	"major pentatonic": majorPentatonicScale,
+	"minor pentatonic": minorPentatonicScale,
 }
 
 func majorScale(key *Note) *Scale {
 	name := "major"
-	intervals := []int{2, 2, 1, 2, 2, 2, 1}
+	intervals := modeIntervals[Mode]
 	naturalDirections := map[string]int{"C": 0, "D": 0, "E": 0, "F": -1, "G": 0, "A": 0, "B": 0}
 	notes := fillScaleNotes(key, intervals)
 	reworkScaleNotes(notes, naturalDirections)
@@ -71,6 +86,70 @@ func melodicMinorScale(key *Note) *Scale {
 	naturalDirections := map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
 	notes := fillScaleNotes(key, intervals)
 	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func bluesScale(key *Note) *Scale {
+	name := "blues"
+	intervals := []int{3, 2, 1, 1, 3, 2}
+	notes := make([]Note, len(intervals) + 1)
+	majorNotes := majorScale(key).Notes
+
+	notes[0] = majorNotes[0]
+	notes[1] = majorNotes[2].Lower(1)
+	notes[2] = majorNotes[3]
+	notes[3] = majorNotes[4].Lower(1)
+	notes[4] = majorNotes[4]
+	notes[5] = majorNotes[6].Lower(1)
+	notes[6] = majorNotes[7]
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func majorPentatonicScale(key *Note) *Scale {
+	name := "major pentatonic"
+	intervals := []int{2, 2, 3, 2, 3}
+	notes := make([]Note, len(intervals) + 1)
+	majorNotes := majorScale(key).Notes
+
+	notes[0] = majorNotes[0]
+	notes[1] = majorNotes[1]
+	notes[2] = majorNotes[2]
+	notes[3] = majorNotes[4]
+	notes[4] = majorNotes[5]
+	notes[5] = majorNotes[7]
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func minorPentatonicScale(key *Note) *Scale {
+	name := "minor pentatonic"
+	intervals := []int{2, 2, 3, 2, 3}
+	notes := make([]Note, len(intervals) + 1)
+	majorNotes := naturalMinorScale(key).Notes
+
+	notes[0] = majorNotes[0]
+	notes[1] = majorNotes[2]
+	notes[2] = majorNotes[3]
+	notes[3] = majorNotes[4]
+	notes[4] = majorNotes[6]
+	notes[5] = majorNotes[7]
 
 	return &Scale{
 		name:      name,
@@ -130,16 +209,20 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 }
 
 func fillScaleNotes(key *Note, intervals []int) []Note {
-	notes := make([]Note, len(intervals)+1)
+	notes := make([]Note, len(intervals) + 1)
 
 	notes[0] = *key
 	for i, interval := range intervals {
-		notes[i+1] = notes[i].Higher(interval)
+		notes[i + 1] = notes[i].Higher(interval)
 	}
 	return notes
 }
 
 func NewScale(name string, key *Note) (*Scale, error) {
+	if _, ok := modeIntervals[Mode]; ! ok {
+		return nil, fmt.Errorf("Scale mode %s is not found", Mode)
+	}
+
 	if scale, ok := scales[name]; ok {
 		return scale(key), nil
 	} else {
