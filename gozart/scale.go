@@ -98,7 +98,7 @@ func melodicMinorScale(key *Note) *Scale {
 func bluesScale(key *Note) *Scale {
 	name := "blues"
 	intervals := []int{3, 2, 1, 1, 3, 2}
-	notes := make([]Note, len(intervals) + 1)
+	notes := make([]Note, len(intervals)+1)
 	majorNotes := majorScale(key).Notes
 
 	notes[0] = majorNotes[0]
@@ -120,7 +120,7 @@ func bluesScale(key *Note) *Scale {
 func majorPentatonicScale(key *Note) *Scale {
 	name := "major pentatonic"
 	intervals := []int{2, 2, 3, 2, 3}
-	notes := make([]Note, len(intervals) + 1)
+	notes := make([]Note, len(intervals)+1)
 	majorNotes := majorScale(key).Notes
 
 	notes[0] = majorNotes[0]
@@ -140,8 +140,8 @@ func majorPentatonicScale(key *Note) *Scale {
 
 func minorPentatonicScale(key *Note) *Scale {
 	name := "minor pentatonic"
-	intervals := []int{2, 2, 3, 2, 3}
-	notes := make([]Note, len(intervals) + 1)
+	intervals := []int{3, 2, 2, 3, 2}
+	notes := make([]Note, len(intervals)+1)
 	majorNotes := naturalMinorScale(key).Notes
 
 	notes[0] = majorNotes[0]
@@ -209,17 +209,17 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 }
 
 func fillScaleNotes(key *Note, intervals []int) []Note {
-	notes := make([]Note, len(intervals) + 1)
+	notes := make([]Note, len(intervals)+1)
 
 	notes[0] = *key
 	for i, interval := range intervals {
-		notes[i + 1] = notes[i].Higher(interval)
+		notes[i+1] = notes[i].Higher(interval)
 	}
 	return notes
 }
 
 func NewScale(name string, key *Note) (*Scale, error) {
-	if _, ok := modeIntervals[Mode]; ! ok {
+	if _, ok := modeIntervals[Mode]; !ok {
 		return nil, fmt.Errorf("Scale mode %s is not found", Mode)
 	}
 

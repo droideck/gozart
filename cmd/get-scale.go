@@ -49,6 +49,7 @@ If you won't give it a scale or a key, it will ask for it.`,
 		}
 
 		fmt.Println("Scale is", ScaleName)
+		fmt.Println("Mode is", gozart.Mode)
 		fmt.Println("Key is", Key)
 		fmt.Println(scale.Notes)
 	},
