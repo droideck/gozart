@@ -9,7 +9,6 @@ type Scale struct {
 	key       Note
 	intervals []int
 	Notes     []Note
-	//chords []Chord
 }
 
 var Mode string = "ionian"
@@ -34,6 +33,10 @@ var scales = map[string]func(*Note) *Scale{
 	"major pentatonic": majorPentatonicScale,
 	"minor pentatonic": minorPentatonicScale,
 }
+/*
+func (*Scale) FindChords() []Chord {
+	nil
+}*/
 
 func majorScale(key *Note) *Scale {
 	name := "major"
