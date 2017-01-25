@@ -33,10 +33,18 @@ var scales = map[string]func(*Note) *Scale{
 	"major pentatonic": majorPentatonicScale,
 	"minor pentatonic": minorPentatonicScale,
 }
-/*
-func (*Scale) FindChords() []Chord {
-	nil
-}*/
+
+func (s *Scale) FindChords() []Chord {
+	var chords []Chord
+
+	for quality := range chordQualities {
+		for _, note := range s.Notes {
+			chord, _ := NewChord(quality, note.fullName)
+			chords = append(chords, *chord)
+		}
+	}
+	return chords
+}
 
 func majorScale(key *Note) *Scale {
 	name := "major"
