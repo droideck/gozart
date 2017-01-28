@@ -18,31 +18,30 @@ var chordQualities = map[string][]int{
 	"sus4":     {5, 7},
 }
 
-func NewChord(quality string, key string) (*Chord, error) {
+func NewChord(quality string, key Note) (*Chord, error) {
 	if _, ok := chordQualities[quality]; !ok {
 		return nil, fmt.Errorf("Chord quality %s is not found", Mode)
 	}
 
-	keyNote, err := NewNote(key)
-	if err != nil {
-		return nil, fmt.Errorf("Key note name %s is not found", key)
-	}
-
-	name := keyNote.name
-	if quality != "major" {
+	name := key.name
+	switch quality {
+	case "minor":
+		name += "m"
+	case "aug", "dim":
 		name += quality
 	}
+
 	intervals := chordQualities[quality]
 	notes := make([]Note, len(intervals)+1)
 
-	notes[0] = *keyNote
+	notes[0] = key
 	for i, interval := range intervals {
 		notes[i+1] = notes[0].Higher(interval)
 	}
 
 	return &Chord{
 		name:      name,
-		key:       *keyNote,
+		key:       key,
 		intervals: intervals,
 		Notes:     notes,
 	}, nil

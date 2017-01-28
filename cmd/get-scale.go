@@ -48,6 +48,11 @@ If you won't give it a scale or a key, it will ask for it.`,
 			log.Fatal(err)
 		}
 
+		// For developing purposes
+		chord, err := gozart.NewChord("aug", *keyNote)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		chords := scale.FindChords()
 
@@ -56,6 +61,7 @@ If you won't give it a scale or a key, it will ask for it.`,
 		fmt.Println("Key is", Key)
 		fmt.Println("Notes are", scale.Notes)
 		fmt.Println("Chords are", chords)
+		fmt.Println("Chord is", chord)
 	},
 }
 
