@@ -10,26 +10,34 @@ type Chord struct {
 }
 
 var chordQualities = map[string][]int{
-	"dim":    {3, 6},
-	"minor":    {3, 7},
-	"major":     {4, 7},
-	"aug":     {4, 8},
-	"sus2":   {2, 7},
-	"sus4":     {5, 7},
+	"":       {4, 7},     // Major
+	"m":      {3, 7},     // Minor
+	"dim":    {3, 6},     // Diminished
+	"aug":    {4, 8},     // Augmented
+	"sus2":   {2, 7},     // Suspended 2nd
+	"sus4":   {5, 7},     // Suspended 4th
+	"M6":     {4, 7, 9},  // Minor 6th
+	"m6":     {3, 7, 9},  // Minor 6th
+	"7":      {4, 7, 10}, // Dominant 7th
+	"M7":     {4, 7, 11}, // Major 7th
+	"m7":     {3, 7, 10}, // Minor 7th
+	"mM7":    {3, 7, 11}, // Minor-major 7th
+	"dim7":   {3, 6, 9},  // Diminished 7th
+	"hdim7":  {3, 6, 10}, // Half-diminished 7th
+	"aug7":   {4, 8, 10}, // Augmented 7th
+	"augM7":  {4, 8, 11}, // Augmented-major 7th
+	"7sus4":  {5, 7, 10}, // Dominant 7th Suspended 4th
+	"M7sus2": {2, 7, 11}, // Major 7th Suspended 2nd
+	"M7sus4": {5, 7, 11}, // Major 7th Suspended 4th
 }
 
-func NewChord(quality string, key Note) (*Chord, error) {
+func NewChord(key Note, quality string) (*Chord, error) {
 	if _, ok := chordQualities[quality]; !ok {
 		return nil, fmt.Errorf("Chord quality %s is not found", Mode)
 	}
 
 	name := key.name
-	switch quality {
-	case "minor":
-		name += "m"
-	case "aug", "dim":
-		name += quality
-	}
+	name += quality
 
 	intervals := chordQualities[quality]
 	notes := make([]Note, len(intervals)+1)

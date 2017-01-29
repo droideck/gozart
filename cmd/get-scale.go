@@ -49,7 +49,7 @@ If you won't give it a scale or a key, it will ask for it.`,
 		}
 
 		// For developing purposes
-		chord, err := gozart.NewChord("aug", *keyNote)
+		chord, err := gozart.NewChord(*keyNote, "7")
 		if err != nil {
 			log.Fatal(err)
 		}

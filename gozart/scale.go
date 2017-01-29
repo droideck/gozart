@@ -39,7 +39,7 @@ func (s *Scale) FindChords() []Chord {
 
 	for quality := range chordQualities {
 		for _, note := range s.Notes {
-			chord, _ := NewChord(quality, note)
+			chord, _ := NewChord(note, quality)
 			chords = append(chords, *chord)
 		}
 	}
