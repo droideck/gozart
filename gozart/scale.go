@@ -2,6 +2,7 @@ package gozart
 
 import (
 	"fmt"
+	"sort"
 )
 
 type Scale struct {
@@ -43,6 +44,7 @@ func (s *Scale) FindChords() []Chord {
 			chords = append(chords, *chord)
 		}
 	}
+	sort.Sort(ByPriority(chords))
 	return chords
 }
 

@@ -7,6 +7,36 @@ type Chord struct {
 	key       Note
 	intervals []int
 	Notes     []Note
+	priority  int
+}
+
+type ByPriority []Chord
+
+func (a ByPriority) Len() int           { return len(a) }
+func (a ByPriority) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByPriority) Less(i, j int) bool { return a[i].priority < a[j].priority }
+
+// TODO: Load it to a config file in ~/.config/gozart/
+var priorities = map[string]int{
+	"":       1,
+	"m":      2,
+	"sus2":   3,
+	"sus4":   4,
+	"dim":    5,
+	"aug":    6,
+	"7":      7,
+	"M7":     8,
+	"m7":     9,
+	"M6":     10,
+	"m6":     10,
+	"mM7":    10,
+	"dim7":   10,
+	"hdim7":  10,
+	"aug7":   10,
+	"augM7":  10,
+	"7sus4":  10,
+	"M7sus2": 10,
+	"M7sus4": 10,
 }
 
 var chordQualities = map[string][]int{
@@ -52,5 +82,6 @@ func NewChord(key Note, quality string) (*Chord, error) {
 		key:       key,
 		intervals: intervals,
 		Notes:     notes,
+		priority:  priorities[quality],
 	}, nil
 }
