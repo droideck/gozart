@@ -38,7 +38,7 @@ var scales = map[string]func(*Note) *Scale{
 func (s *Scale) FindChords() []Chord {
 	var chords []Chord
 
-	for quality := range chordQualities {
+	for quality := range ChordQualities {
 		for _, note := range s.Notes {
 			chord, _ := NewChord(note, quality)
 			chords = append(chords, *chord)
@@ -64,7 +64,7 @@ func majorScale(key *Note) *Scale {
 }
 
 func naturalMinorScale(key *Note) *Scale {
-	name := "naturalMinor"
+	name := "natural minor"
 	intervals := []int{2, 1, 2, 2, 1, 2, 2}
 	naturalDirections := map[string]int{"C": -1, "D": -1, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
 	notes := fillScaleNotes(key, intervals)
@@ -79,7 +79,7 @@ func naturalMinorScale(key *Note) *Scale {
 }
 
 func harmonicMinorScale(key *Note) *Scale {
-	name := "harmonicMinor"
+	name := "harmonic minor"
 	intervals := []int{2, 1, 2, 2, 1, 3, 1}
 	naturalDirections := map[string]int{"C": -1, "D": -1, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
 	notes := fillScaleNotes(key, intervals)
@@ -93,8 +93,9 @@ func harmonicMinorScale(key *Note) *Scale {
 	}
 }
 
+// TODO: Implement descending melodic minor scale (it has another notes)
 func melodicMinorScale(key *Note) *Scale {
-	name := "melodicMinor"
+	name := "melodic minor"
 	intervals := []int{2, 1, 2, 2, 2, 2, 1}
 	naturalDirections := map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
 	notes := fillScaleNotes(key, intervals)

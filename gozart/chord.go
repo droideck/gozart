@@ -1,6 +1,8 @@
 package gozart
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Chord struct {
 	name      string
@@ -16,8 +18,7 @@ func (a ByPriority) Len() int           { return len(a) }
 func (a ByPriority) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByPriority) Less(i, j int) bool { return a[i].priority < a[j].priority }
 
-// TODO: Load it to a config file in ~/.config/gozart/
-var priorities = map[string]int{
+var ChordPriorities = map[string]int{
 	"":       1,
 	"m":      2,
 	"sus2":   3,
@@ -39,7 +40,7 @@ var priorities = map[string]int{
 	"M7sus4": 10,
 }
 
-var chordQualities = map[string][]int{
+var ChordQualities = map[string][]int{
 	"":       {4, 7},     // Major
 	"m":      {3, 7},     // Minor
 	"dim":    {3, 6},     // Diminished
@@ -62,14 +63,14 @@ var chordQualities = map[string][]int{
 }
 
 func NewChord(key Note, quality string) (*Chord, error) {
-	if _, ok := chordQualities[quality]; !ok {
+	if _, ok := ChordQualities[quality]; !ok {
 		return nil, fmt.Errorf("Chord quality %s is not found", Mode)
 	}
 
 	name := key.name
 	name += quality
 
-	intervals := chordQualities[quality]
+	intervals := ChordQualities[quality]
 	notes := make([]Note, len(intervals)+1)
 
 	notes[0] = key
@@ -82,6 +83,6 @@ func NewChord(key Note, quality string) (*Chord, error) {
 		key:       key,
 		intervals: intervals,
 		Notes:     notes,
-		priority:  priorities[quality],
+		priority:  ChordPriorities[quality],
 	}, nil
 }

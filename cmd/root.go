@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/droideck/gozart/gozart"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -45,7 +46,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gozart.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config",
+		"", "config file (default is $HOME/.config/gozart/priorities.json)")
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
@@ -55,12 +57,21 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".gozart") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")   // adding home directory as first search path
-	viper.AutomaticEnv()           // read in environment variables that match
+	viper.SetConfigName("priorities")           // name of config file (without extension)
+	viper.AddConfigPath("$HOME/.config/gozart") // adding home config directory as first search path
+	viper.AutomaticEnv()                        // read in environment variables that match
 
-	// If a config file is found, read it in.
+	// TODO: Deal with case insensitivity
+	// If a config file is found, read it in and apply to ChordPriorities
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		// First, check that all qualities in the config is valid
+		configPriorities := viper.GetStringMap("priorities")
+		for quality, priority := range configPriorities {
+			if _, ok := gozart.ChordQualities[quality]; ok {
+				gozart.ChordPriorities[quality] = int(priority.(float64))
+			} else {
+				fmt.Errorf("Chord quality '%s' is not found in the config", quality)
+			}
+		}
 	}
 }
