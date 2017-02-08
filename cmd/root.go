@@ -47,30 +47,31 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config",
-		"", "config file (default is $HOME/.config/gozart/priorities.json)")
+		"", "config file (default is $HOME/.config/gozart/conf.yaml)")
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
+	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName("priorities")           // name of config file (without extension)
+	viper.SetConfigName("conf")                 // name of config file (without extension)
 	viper.AddConfigPath("$HOME/.config/gozart") // adding home config directory as first search path
 	viper.AutomaticEnv()                        // read in environment variables that match
 
-	// TODO: Deal with case insensitivity
 	// If a config file is found, read it in and apply to ChordPriorities
 	if err := viper.ReadInConfig(); err == nil {
+		gozart.ChordPriorities = make(map[string]int)
+
 		// First, check that all qualities in the config is valid
-		configPriorities := viper.GetStringMap("priorities")
-		for quality, priority := range configPriorities {
+		configPriorities := viper.GetStringSlice("qualities")
+		for priority, quality := range configPriorities {
 			if _, ok := gozart.ChordQualities[quality]; ok {
-				gozart.ChordPriorities[quality] = int(priority.(float64))
+				gozart.ChordPriorities[quality] = priority + 1
 			} else {
-				fmt.Errorf("Chord quality '%s' is not found in the config", quality)
+				fmt.Printf("Chord quality '%s' is not found in the config\n", quality)
 			}
 		}
 	}

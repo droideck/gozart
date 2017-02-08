@@ -1,0 +1,20 @@
+qualities:
+        - major
+        - minor
+        - diminished
+        - augmented
+        - suspended 2nd
+        - suspended 4th
+        - dominant 7th
+        - major 7th
+        - minor 7th
+        - major 6th
+        - minor 6th
+        - minor-major 7th
+        - diminished 7th
+        - half-diminished 7th
+        - augmented 7th
+        - augmented-major 7th
+        - dominant 7th suspended 4th
+        - major 7th Suspended 2nd
+        - major 7th Suspended 4th

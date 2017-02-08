@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// TODO: Fix tests according new changes
 var trueChords = map[string]Chord{
 	"F.":       {"F", Note{"F", "F", 0, 5}, []int{4, 7}, []Note{{"F", "F", 0, 5}, {"A", "A", 0, 9}, {"C", "C", 0, 0}}, 1},
 	"F.m":      {"Fm", Note{"F", "F", 0, 5}, []int{3, 7}, []Note{{"F", "F", 0, 5}, {"G#", "G", 2, 8}, {"C", "C", 0, 0}}, 2},

@@ -40,8 +40,10 @@ func (s *Scale) FindChords() []Chord {
 
 	for quality := range ChordQualities {
 		for _, note := range s.Notes {
-			chord, _ := NewChord(note, quality)
-			chords = append(chords, *chord)
+			if _, ok := ChordPriorities[quality]; ok {
+				chord, _ := NewChord(note, quality)
+				chords = append(chords, *chord)
+			}
 		}
 	}
 	sort.Sort(ByPriority(chords))
