@@ -65,7 +65,7 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		gozart.ChordPriorities = make(map[string]int)
 
-		// First, check that all qualities in the config is valid
+		// Use only qualities from the config file and check that the quality names are valid
 		configPriorities := viper.GetStringSlice("qualities")
 		for priority, quality := range configPriorities {
 			if _, ok := gozart.ChordQualities[quality]; ok {

@@ -48,12 +48,14 @@ If you won't give it a scale or a key, it will ask for it.`,
 			log.Fatal(err)
 		}
 
-		chords := scale.FindChords()
+		chords := scale.FindAllChords()
+		diatonicChords := scale.FindDiatonicChords(true)
 
 		fmt.Println("Scale is", ScaleName)
 		fmt.Println("Mode is", gozart.Mode)
 		fmt.Println("Key is", Key)
 		fmt.Println("Notes are", scale.Notes)
+		fmt.Println("Diatonic chords are", diatonicChords)
 		fmt.Println("Chords are", chords)
 	},
 }

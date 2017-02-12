@@ -35,7 +35,16 @@ var scales = map[string]func(*Note) *Scale{
 	"minor pentatonic": minorPentatonicScale,
 }
 
-func (s *Scale) FindChords() []Chord {
+var diatonicChords = map[string][]string{
+	"major":            {"major", "minor", "minor", "major", "major", "minor", "diminished", "major"},
+	"natural minor": {"minor", "diminished", "major", "minor", "minor", "major", "major", "minor"},
+	"major 7th": {"major 7th", "minor 7th", "minor 7th", "major 7th", "dominant 7th", "minor 7th", "half-diminished 7th", "major 7th"},
+	"natural minor 7th": {"minor 7th", "half-diminished 7th", "major 7th", "minor 7th", "minor 7th", "major 7th", "dominant 7th", "minor 7th"},
+}
+
+// You can specify chord priorities in a config file
+// Or can remove displayed chords from an output. See help for details
+func (s *Scale) FindAllChords() []Chord {
 	var chords []Chord
 
 	for quality := range ChordQualities {
@@ -47,6 +56,23 @@ func (s *Scale) FindChords() []Chord {
 		}
 	}
 	sort.Sort(ByPriority(chords))
+	return chords
+}
+
+// Config file wouldn't affect the diatonic chord output
+func (s *Scale) FindDiatonicChords(seventh bool) []Chord {
+	var chords []Chord
+	var scaleName string = s.name
+	if seventh {
+		scaleName += " 7th"
+	}
+
+	for noteNum, quality := range diatonicChords[scaleName] {
+		if _, ok := ChordPriorities[quality]; ok {
+			chord, _ := NewChord(s.Notes[noteNum], quality)
+			chords = append(chords, *chord)
+		}
+	}
 	return chords
 }
 
@@ -158,14 +184,14 @@ func minorPentatonicScale(key *Note) *Scale {
 	name := "minor pentatonic"
 	intervals := []int{3, 2, 2, 3, 2}
 	notes := make([]Note, len(intervals)+1)
-	majorNotes := naturalMinorScale(key).Notes
+	minorNotes := naturalMinorScale(key).Notes
 
-	notes[0] = majorNotes[0]
-	notes[1] = majorNotes[2]
-	notes[2] = majorNotes[3]
-	notes[3] = majorNotes[4]
-	notes[4] = majorNotes[6]
-	notes[5] = majorNotes[7]
+	notes[0] = minorNotes[0]
+	notes[1] = minorNotes[2]
+	notes[2] = minorNotes[3]
+	notes[3] = minorNotes[4]
+	notes[4] = minorNotes[6]
+	notes[5] = minorNotes[7]
 
 	return &Scale{
 		name:      name,
