@@ -49,13 +49,15 @@ If you won't give it a scale or a key, it will ask for it.`,
 		}
 
 		chords := scale.FindAllChords()
-		diatonicChords := scale.FindDiatonicChords(true)
+		diatonicChords := scale.FindDiatonicChords(false)
+		diatonicChords7th := scale.FindDiatonicChords(true)
 
 		fmt.Println("Scale is", ScaleName)
 		fmt.Println("Mode is", gozart.Mode)
 		fmt.Println("Key is", Key)
 		fmt.Println("Notes are", scale.Notes)
 		fmt.Println("Diatonic chords are", diatonicChords)
+		fmt.Println("Diatonic 7th chords are", diatonicChords7th)
 		fmt.Println("Chords are", chords)
 	},
 }
