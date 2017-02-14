@@ -23,6 +23,7 @@ func (a ByPriority) Len() int           { return len(a) }
 func (a ByPriority) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByPriority) Less(i, j int) bool { return a[i].priority < a[j].priority }
 
+// TODO: Implement proper note names (with flat or sharp)
 var ChordQualities = map[string]Quality{
 	"major":                      {"major", "", []int{4, 7}},
 	"minor":                      {"minor", "m", []int{3, 7}},
@@ -43,6 +44,14 @@ var ChordQualities = map[string]Quality{
 	"major 7th Suspended 4th":    {"major 7th Suspended 4th", "M7sus4", []int{5, 7, 11}},
 	"major 6th":                  {"major 6th", "M6", []int{4, 7, 9}},
 	"minor 6th":                  {"minor 6th", "m6", []int{3, 7, 9}},
+	"dominant 9th":               {"dominant 9th", "9", []int{4, 7, 10, 14}},
+	"dominant minor 9th":         {"dominant minor 9th", "7b9", []int{4, 7, 10, 13}},
+	"dominant 7th sharp 9th":     {"dominant 7th sharp 9th", "7#9", []int{4, 7, 10, 15}},
+	"major 9th":                  {"major 9th", "M9", []int{4, 7, 11, 14}},
+	"minor 9th":                  {"minor 9th", "7b9", []int{3, 7, 10, 14}},
+	"dominant 11th":              {"dominant 11th", "11", []int{4, 7, 10, 14, 17}},
+	"major 11th":                 {"major 11th", "M11", []int{4, 7, 11, 14, 18}},
+	"minor 11th":                 {"minor 11th", "m11", []int{3, 7, 10, 14, 17}},
 }
 
 var ChordPriorities = map[string]int{
@@ -65,6 +74,14 @@ var ChordPriorities = map[string]int{
 	"major 7th Suspended 4th":    17,
 	"major 6th":                  18,
 	"minor 6th":                  19,
+	"dominant 9th":               20,
+	"dominant minor 9th":         21,
+	"dominant 7th sharp 9th":     22,
+	"major 9th":                  23,
+	"minor 9th":                  24,
+	"dominant 11th":              25,
+	"major 11th":                 26,
+	"minor 11th":                 27,
 }
 
 func NewChord(key Note, quality string) (*Chord, error) {

@@ -123,7 +123,11 @@ func (n *Note) Higher(interval int) Note {
 	if nextNoteNum := n.number + interval; nextNoteNum < 12 {
 		nextNote = noteNamesSharp[nextNoteNum]
 	} else {
-		nextNote = noteNamesSharp[nextNoteNum-12]
+		if nextNoteNum < 24 {
+			nextNote = noteNamesSharp[nextNoteNum-12]
+		} else {
+			nextNote = noteNamesSharp[nextNoteNum-24]
+		}
 	}
 
 	note, _ = NewNote(nextNote)
@@ -137,7 +141,11 @@ func (n *Note) Lower(interval int) Note {
 	if nextNoteNum := n.number - interval; nextNoteNum > -1 {
 		nextNote = noteNamesFlat[nextNoteNum]
 	} else {
-		nextNote = noteNamesFlat[nextNoteNum+12]
+		if nextNoteNum > -1 {
+			nextNote = noteNamesSharp[nextNoteNum+12]
+		} else {
+			nextNote = noteNamesSharp[nextNoteNum+24]
+		}
 	}
 
 	note, _ = NewNote(nextNote)

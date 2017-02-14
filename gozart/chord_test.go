@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// TODO: Add tests for new chords
 var trueChords = map[string]Chord{
 	"F.major":                      {Note{"F", "F", 0, 5}, Quality{"major", "", []int{4, 7}}, []Note{{"F", "F", 0, 5}, {"A", "A", 0, 9}, {"C", "C", 0, 0}}, 1},
 	"F.minor":                      {Note{"F", "F", 0, 5}, Quality{"minor", "m", []int{3, 7}}, []Note{{"F", "F", 0, 5}, {"G#", "G", 2, 8}, {"C", "C", 0, 0}}, 2},
@@ -26,6 +27,7 @@ var trueChords = map[string]Chord{
 	"F.major 7th Suspended 4th":    {Note{"F", "F", 0, 5}, Quality{"major 7th Suspended 4th", "M7sus4", []int{5, 7, 11}}, []Note{{"F", "F", 0, 5}, {"A#", "A", 2, 10}, {"C", "C", 0, 0}, {"E", "E", 0, 4}}, 17},
 	"F.major 6th":                  {Note{"F", "F", 0, 5}, Quality{"major 6th", "M6", []int{4, 7, 9}}, []Note{{"F", "F", 0, 5}, {"A", "A", 0, 9}, {"C", "C", 0, 0}, {"D", "D", 0, 2}}, 18},
 	"F.minor 6th":                  {Note{"F", "F", 0, 5}, Quality{"minor 6th", "m6", []int{3, 7, 9}}, []Note{{"F", "F", 0, 5}, {"G#", "G", 2, 8}, {"C", "C", 0, 0}, {"D", "D", 0, 2}}, 19},
+	"F.dominant 9th":               {Note{"F", "F", 0, 5}, Quality{"dominant 9th", "9", []int{4, 7, 10, 14}}, []Note{{"F", "F", 0, 5}, {"A", "A", 0, 9}, {"C", "C", 0, 0}, {"D#", "D", 2, 3}, {"G", "G", 0, 7}}, 20},
 }
 
 func TestNewChord(t *testing.T) {
