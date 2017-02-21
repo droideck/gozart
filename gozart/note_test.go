@@ -11,8 +11,8 @@ var notes = map[string]Note{
 }
 
 var noteA, _ = NewNote("A")
-var notesASharp = map[int]string{0: "A", 2: "B", 3: "C", 7: "E", 12: "A", 13: "A#"}
-var notesAFlat = map[int]string{0: "A", 3: "Gb", 9: "C", 10: "B", 12: "A", 13: "Ab"}
+var notesASharp = map[int]string{0: "A", 2: "B", 3: "C", 7: "E", 12: "A", 13: "A#", 20: "F"}
+var notesAFlat = map[int]string{0: "A", 3: "Gb", 9: "C", 10: "B", 12: "A", 13: "Ab", 20: "Db"}
 
 func TestNewNote(t *testing.T) {
 	for noteName, note := range notes {

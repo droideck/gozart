@@ -1,8 +1,6 @@
 package gozart
 
-import (
-	"fmt"
-)
+import "fmt"
 
 var naturalNotes = map[string]int{"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 var noteNamesSharp = []string{"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
@@ -141,10 +139,10 @@ func (n *Note) Lower(interval int) Note {
 	if nextNoteNum := n.number - interval; nextNoteNum > -1 {
 		nextNote = noteNamesFlat[nextNoteNum]
 	} else {
-		if nextNoteNum > -1 {
-			nextNote = noteNamesSharp[nextNoteNum+12]
+		if nextNoteNum > -13 {
+			nextNote = noteNamesFlat[nextNoteNum+12]
 		} else {
-			nextNote = noteNamesSharp[nextNoteNum+24]
+			nextNote = noteNamesFlat[nextNoteNum+24]
 		}
 	}
 

@@ -35,6 +35,7 @@ var scales = map[string]func(*Note) *Scale{
 	"minor pentatonic": minorPentatonicScale,
 }
 
+// TODO: Add more chords here and to chord.go if required
 var diatonicChords = map[string][]string{
 	"major":              {"major", "minor", "minor", "major", "major", "minor", "diminished", "major"},
 	"natural minor":      {"minor", "diminished", "major", "minor", "minor", "major", "major", "minor"},
@@ -44,6 +45,7 @@ var diatonicChords = map[string][]string{
 	"natural minor 7th":  {"minor 7th", "half-diminished 7th", "major 7th", "minor 7th", "minor 7th", "major 7th", "dominant 7th", "minor 7th"},
 	"harmonic minor 7th": {"minor-major 7th", "half-diminished 7th", "augmented-major 7th", "minor 7th", "dominant 7th", "major 7th", "diminished 7th", "minor-major 7th"},
 	"melodic minor 7th":  {"minor-major 7th", "minor 7th", "augmented-major 7th", "dominant 7th", "dominant 7th", "half-diminished 7th", "half-diminished 7th", "minor-major 7th"},
+	"major 9th":          {"major 9th", "minor 9th", "minor 7b9", "major 9th", "dominant 9th", "minor 9th", "minor 7b5b9", "major 9th"},
 }
 
 // You can specify chord priorities in a config file
@@ -64,11 +66,11 @@ func (s *Scale) FindAllChords() []Chord {
 }
 
 // Config file wouldn't affect the diatonic chord output
-func (s *Scale) FindDiatonicChords(seventh bool) []Chord {
+func (s *Scale) FindDiatonicChords(extended string) []Chord {
 	var chords []Chord
 	var scaleName string = s.name
-	if seventh {
-		scaleName += " 7th"
+	if extended != "" {
+		scaleName += " " + extended
 	}
 
 	for noteNum, quality := range diatonicChords[scaleName] {
@@ -236,7 +238,7 @@ func chromaticScale(key *Note) *Scale {
 
 func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 	var direction int
-	var nextNaturalNote Note
+	var nextChordNote Note
 	var key Note = notes[0]
 
 	// Define the direction where we change accidentals
@@ -255,18 +257,18 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 	// Rework notes so they wouldn't repeat
 	previous, _ := NewNote(key.name)
 	for i := 1; i < len(notes); i++ {
-		nextNaturalNote = previous.Higher(1)
+		nextChordNote = previous.Higher(1)
 		for i := 0; i < 4; i++ {
-			if nextNaturalNote.accidental != 0 || previous.name == nextNaturalNote.name {
-				nextNaturalNote = nextNaturalNote.Higher(1)
+			if nextChordNote.accidental != 0 || previous.name == nextChordNote.name {
+				nextChordNote = nextChordNote.Higher(1)
 			}
 		}
 
-		if nextNaturalNote.fullName != notes[i].name {
-			notes[i].switchAccidental(direction, nextNaturalNote.fullName)
+		if nextChordNote.fullName != notes[i].name {
+			notes[i].switchAccidental(direction, nextChordNote.fullName)
 		}
 
-		previous, _ = NewNote(nextNaturalNote.name)
+		previous, _ = NewNote(nextChordNote.name)
 	}
 }
 
