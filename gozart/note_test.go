@@ -3,11 +3,11 @@ package gozart
 import "testing"
 
 var notes = map[string]Note{
-	"A":  {fullName: "A", name: "A", accidental: 0, number: 9},
-	"A#": {fullName: "A#", name: "A", accidental: 2, number: 10},
-	"A♯": {fullName: "A#", name: "A", accidental: 2, number: 10},
-	"Ab": {fullName: "Ab", name: "A", accidental: 1, number: 8},
-	"A♭": {fullName: "Ab", name: "A", accidental: 1, number: 8},
+	"A":  {FullName: "A", name: "A", accidental: 0, number: 9},
+	"A#": {FullName: "A#", name: "A", accidental: 2, number: 10},
+	"A♯": {FullName: "A#", name: "A", accidental: 2, number: 10},
+	"Ab": {FullName: "Ab", name: "A", accidental: 1, number: 8},
+	"A♭": {FullName: "Ab", name: "A", accidental: 1, number: 8},
 }
 
 var noteA, _ = NewNote("A")

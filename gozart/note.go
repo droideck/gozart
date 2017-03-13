@@ -16,11 +16,10 @@ var noteToNum = map[string]int{
 }
 
 type Note struct {
-	fullName   string
+	FullName   string
 	name       string
 	accidental int
 	number     int
-	//octave int // Future
 }
 
 func resolveNoteData(fullName string) (map[string]interface{}, error) {
@@ -107,7 +106,7 @@ func NewNote(name string) (*Note, error) {
 		return nil, err
 	}
 	return &Note{
-		fullName:   data["name"].(string),
+		FullName:   data["name"].(string),
 		name:       data["natural"].(string),
 		accidental: data["accidental"].(int),
 		number:     data["number"].(int),
@@ -163,9 +162,9 @@ func (n *Note) switchAccidental(direction int, naturalNoteName string) {
 			accidental += 12
 		}
 		n.name = naturalNoteName
-		n.fullName = naturalNoteName
+		n.FullName = naturalNoteName
 		for i := 0; i < accidental; i++ {
-			n.fullName += "b"
+			n.FullName += "b"
 		}
 	} else {
 		// Sharps
@@ -174,12 +173,12 @@ func (n *Note) switchAccidental(direction int, naturalNoteName string) {
 			accidental += 12
 		}
 		n.name = naturalNoteName
-		n.fullName = naturalNoteName
+		n.FullName = naturalNoteName
 		for i := 0; i < accidental; i++ {
-			n.fullName += "#"
+			n.FullName += "#"
 		}
 	}
-	data, _ := resolveNoteData(n.fullName)
+	data, _ := resolveNoteData(n.FullName)
 	n.name = data["natural"].(string)
 	n.accidental = data["accidental"].(int)
 	n.number = data["number"].(int)

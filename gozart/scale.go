@@ -242,7 +242,7 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 	var key Note = notes[0]
 
 	// Define the direction where we change accidentals
-	if naturalDirection, ok := naturalDirections[key.fullName]; ok {
+	if naturalDirection, ok := naturalDirections[key.FullName]; ok {
 		direction = naturalDirection
 	} else {
 		if key.accidental%2 == 0 {
@@ -264,8 +264,8 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 			}
 		}
 
-		if nextChordNote.fullName != notes[i].name {
-			notes[i].switchAccidental(direction, nextChordNote.fullName)
+		if nextChordNote.FullName != notes[i].name {
+			notes[i].switchAccidental(direction, nextChordNote.FullName)
 		}
 
 		previous, _ = NewNote(nextChordNote.name)
