@@ -102,7 +102,7 @@ You can specify the next scale names:
 - locryan
 
 Use major for ionian
-Use minor for aeolian
+Use natural minor for aeolian
 
 Example:
 gozart get scale --name="major" --key="C#"

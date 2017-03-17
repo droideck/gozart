@@ -22,6 +22,19 @@ type Note struct {
 	number     int
 }
 
+func getInterval(higherNote Note, lowerNote Note) int {
+	higher := higherNote
+	lower := lowerNote
+
+	for interval := 0; interval < 12; interval++ {
+		if higher.number == lower.number {
+			return interval
+		} else {
+			lower.Higher(1)
+		}
+	}
+}
+
 func resolveNoteData(fullName string) (map[string]interface{}, error) {
 	var note string
 	var accidental int

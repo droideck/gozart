@@ -2,7 +2,6 @@ package gozart
 
 import (
 	"fmt"
-	"sort"
 )
 
 type Scale struct {
@@ -35,49 +34,30 @@ var scales = map[string]func(*Note) *Scale{
 	"minor pentatonic": minorPentatonicScale,
 }
 
-// TODO: Add more chords here and to chord.go if required
-var diatonicChords = map[string][]string{
-	"major":              {"major", "minor", "minor", "major", "major", "minor", "diminished", "major"},
-	"natural minor":      {"minor", "diminished", "major", "minor", "minor", "major", "major", "minor"},
-	"harmonic minor":     {"minor", "diminished", "augmented", "minor", "major", "major", "diminished", "minor"},
-	"melodic minor":      {"minor", "minor", "augmented", "major", "major", "diminished", "diminished", "minor"},
-	"major 7th":          {"major 7th", "minor 7th", "minor 7th", "major 7th", "dominant 7th", "minor 7th", "half-diminished 7th", "major 7th"},
-	"natural minor 7th":  {"minor 7th", "half-diminished 7th", "major 7th", "minor 7th", "minor 7th", "major 7th", "dominant 7th", "minor 7th"},
-	"harmonic minor 7th": {"minor-major 7th", "half-diminished 7th", "augmented-major 7th", "minor 7th", "dominant 7th", "major 7th", "diminished 7th", "minor-major 7th"},
-	"melodic minor 7th":  {"minor-major 7th", "minor 7th", "augmented-major 7th", "dominant 7th", "dominant 7th", "half-diminished 7th", "half-diminished 7th", "minor-major 7th"},
-	"major 9th":          {"major 9th", "minor 9th", "minor 7b9", "major 9th", "dominant 9th", "minor 9th", "minor 7b5b9", "major 9th"},
-}
-
-// You can specify chord priorities in a config file
-// Or can remove displayed chords from an output. See help for details
-func (s *Scale) FindAllChords() []Chord {
-	var chords []Chord
-
-	for quality := range ChordQualities {
-		for _, note := range s.Notes {
-			if _, ok := ChordPriorities[quality]; ok {
-				chord, _ := NewChord(note, quality)
-				chords = append(chords, *chord)
-			}
-		}
-	}
-	sort.Sort(ByPriority(chords))
-	return chords
-}
-
-// Config file wouldn't affect the diatonic chord output
 func (s *Scale) FindDiatonicChords(extended string) []Chord {
 	var chords []Chord
+	var chordIntervals []int
 	var scaleName string = s.name
-	if extended != "" {
-		scaleName += " " + extended
+	var numIntervals int = 3
+
+	switch extended {
+	case "7":
+		numIntervals += 1
+	case "9":
+		numIntervals += 2
+	case "11":
+		numIntervals += 3
+	case "13":
+		numIntervals += 4
 	}
 
-	for noteNum, quality := range diatonicChords[scaleName] {
-		if _, ok := ChordPriorities[quality]; ok {
-			chord, _ := NewChord(s.Notes[noteNum], quality)
-			chords = append(chords, *chord)
+	for _, note := range s.Notes {
+		for i := 1; i <= numIntervals; i++ {
+			interval := getInterval(note, s.Notes[i])
+			chordIntervals = append(chordIntervals, interval)
 		}
+		chord, _ := NewChord(note, chordIntervals)
+		chords = append(chords, *chord)
 	}
 	return chords
 }
