@@ -16,23 +16,46 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"github.com/spf13/cobra"
+	"github.com/droideck/gozart/gozart"
 )
 
-// jamCmd represents the jam command
 var jamCmd = &cobra.Command{
 	Use:   "jam",
 	Short: "Get the options for an improvisation or a composition",
 	Long: `Gives you chords and scales that sounds good (in some circumstances)
 with the scale you give.
-You can specify additional options for the command ot it will take them from a config
-file or from defaults.`,
+
+By default it will show you diatonic chords without any extentions.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("jam called")
+		var notes string
+
+		keyNote, err := gozart.NewNote(Key)
+		if err != nil {
+			log.Fatalf("Key search. %s", err)
+		}
+
+		scale, err := gozart.NewScale(ScaleName, keyNote)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, note := range scale.Notes {
+			notes += note.FullName + " "
+		}
+		fmt.Println(notes)
+
+		diatonicChords, err := scale.FindDiatonicChords("")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(diatonicChords)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(jamCmd)
+	jamCmd.PersistentFlags().StringVarP(&ScaleName, "scale", "s", "major", "Scale name")
+	jamCmd.PersistentFlags().StringVarP(&Key, "key", "k", "C", "Key name")
 }

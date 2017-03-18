@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/droideck/gozart/gozart"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -62,17 +61,6 @@ func initConfig() {
 	viper.AutomaticEnv()                        // read in environment variables that match
 
 	// If a config file is found, read it in and apply to ChordPriorities
-	if err := viper.ReadInConfig(); err == nil {
-		gozart.ChordPriorities = make(map[string]int)
-
-		// Use only qualities from the config file and check that the quality names are valid
-		configPriorities := viper.GetStringSlice("qualities")
-		for priority, quality := range configPriorities {
-			if _, ok := gozart.ChordQualities[quality]; ok {
-				gozart.ChordPriorities[quality] = priority + 1
-			} else {
-				fmt.Printf("Chord quality '%s' is not found in the config\n", quality)
-			}
-		}
-	}
+	// if err := viper.ReadInConfig(); err == nil {
+	// }
 }

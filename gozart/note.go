@@ -22,17 +22,18 @@ type Note struct {
 	number     int
 }
 
-func getInterval(higherNote Note, lowerNote Note) int {
-	higher := higherNote
-	lower := lowerNote
+func getInterval(higherNote Note, lowerNote Note) (int, error) {
+	note := lowerNote
 
 	for interval := 0; interval < 12; interval++ {
-		if higher.number == lower.number {
-			return interval
+		if higherNote.number == note.number {
+			return interval, nil
 		} else {
-			lower.Higher(1)
+			note = note.Higher(1)
 		}
 	}
+
+	return 0, fmt.Errorf("Interval is not found.")
 }
 
 func resolveNoteData(fullName string) (map[string]interface{}, error) {
@@ -41,7 +42,7 @@ func resolveNoteData(fullName string) (map[string]interface{}, error) {
 	var accSymbol string
 
 	if len(fullName) == 0 {
-		return nil, fmt.Errorf("Please, specify note")
+		return nil, fmt.Errorf("Please, specify a note")
 	} else {
 		note = string(fullName[0])
 	}

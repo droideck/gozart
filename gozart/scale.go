@@ -34,10 +34,8 @@ var scales = map[string]func(*Note) *Scale{
 	"minor pentatonic": minorPentatonicScale,
 }
 
-func (s *Scale) FindDiatonicChords(extended string) []Chord {
+func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 	var chords []Chord
-	var chordIntervals []int
-	var scaleName string = s.name
 	var numIntervals int = 3
 
 	switch extended {
@@ -51,15 +49,22 @@ func (s *Scale) FindDiatonicChords(extended string) []Chord {
 		numIntervals += 4
 	}
 
-	for _, note := range s.Notes {
-		for i := 1; i <= numIntervals; i++ {
-			interval := getInterval(note, s.Notes[i])
+	for j, note := range s.Notes {
+		var chordIntervals []int
+
+		for i := 1; i <= numIntervals; i += 2 {
+			fmt.Println(s.Notes[j].Higher(i + 1))
+			interval, err := getInterval(s.Notes[j].Higher(i+1), note)
+			if err != nil {
+				return nil, fmt.Errorf("%s for higher note %s and lower note %s", err, s.Notes[i].FullName, note.FullName)
+			}
 			chordIntervals = append(chordIntervals, interval)
 		}
 		chord, _ := NewChord(note, chordIntervals)
 		chords = append(chords, *chord)
 	}
-	return chords
+
+	return chords, nil
 }
 
 func majorScale(key *Note) *Scale {
