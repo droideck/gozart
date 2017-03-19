@@ -127,6 +127,16 @@ func NewNote(name string) (*Note, error) {
 	}, nil
 }
 
+func (n *Note) NextNatural() Note {
+	nextNote := n.Higher(1)
+	for i := 0; i < 4; i++ {
+		if nextNote.accidental != 0 || n.name == nextNote.name {
+			nextNote = nextNote.Higher(1)
+		}
+	}
+	return nextNote
+}
+
 func (n *Note) Higher(interval int) Note {
 	var note *Note
 	var nextNote string

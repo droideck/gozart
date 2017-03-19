@@ -52,9 +52,17 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 	for j, note := range s.Notes {
 		var chordIntervals []int
 
-		for i := 1; i <= numIntervals; i += 2 {
-			fmt.Println(s.Notes[j].Higher(i + 1))
-			interval, err := getInterval(s.Notes[j].Higher(i+1), note)
+		for i := 2; i < numIntervals*2; i += 2 {
+			var nextChordNote Note
+
+			// Work out the Notes range overflow
+			if j + i > 7 {
+				nextChordNote = s.Notes[j+i-7]
+			} else {
+				nextChordNote = s.Notes[j+i]
+			}
+
+			interval, err := getInterval(nextChordNote, note)
 			if err != nil {
 				return nil, fmt.Errorf("%s for higher note %s and lower note %s", err, s.Notes[i].FullName, note.FullName)
 			}
@@ -223,7 +231,7 @@ func chromaticScale(key *Note) *Scale {
 
 func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 	var direction int
-	var nextChordNote Note
+	var nextScaleNote Note
 	var key Note = notes[0]
 
 	// Define the direction where we change accidentals
@@ -242,18 +250,13 @@ func reworkScaleNotes(notes []Note, naturalDirections map[string]int) {
 	// Rework notes so they wouldn't repeat
 	previous, _ := NewNote(key.name)
 	for i := 1; i < len(notes); i++ {
-		nextChordNote = previous.Higher(1)
-		for i := 0; i < 4; i++ {
-			if nextChordNote.accidental != 0 || previous.name == nextChordNote.name {
-				nextChordNote = nextChordNote.Higher(1)
-			}
+		nextScaleNote = previous.NextNatural()
+
+		if nextScaleNote.FullName != notes[i].name {
+			notes[i].switchAccidental(direction, nextScaleNote.FullName)
 		}
 
-		if nextChordNote.FullName != notes[i].name {
-			notes[i].switchAccidental(direction, nextChordNote.FullName)
-		}
-
-		previous, _ = NewNote(nextChordNote.name)
+		previous, _ = NewNote(nextScaleNote.name)
 	}
 }
 

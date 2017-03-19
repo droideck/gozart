@@ -50,7 +50,12 @@ By default it will show you diatonic chords without any extentions.`,
 		if err != nil {
 			log.Fatal(err)
 		}
+		diatonicChords7, err := scale.FindDiatonicChords("7")
+		if err != nil {
+			log.Fatal(err)
+		}
 		fmt.Println(diatonicChords)
+		fmt.Println(diatonicChords7)
 	},
 }
 
