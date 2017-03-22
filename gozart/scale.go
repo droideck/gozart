@@ -49,7 +49,7 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 		numIntervals += 4
 	}
 
-	for j, note := range s.Notes {
+	for j, note := range s.Notes[:7] {
 		var chordIntervals []int
 
 		for i := 2; i < numIntervals*2; i += 2 {
@@ -66,7 +66,13 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 			if err != nil {
 				return nil, fmt.Errorf("%s for higher note %s and lower note %s", err, s.Notes[i].FullName, note.FullName)
 			}
-			chordIntervals = append(chordIntervals, interval)
+
+			// Add 12 to any interval higher then an octave
+			if i < 7 {
+				chordIntervals = append(chordIntervals, interval)
+			} else {
+				chordIntervals = append(chordIntervals, interval + 12)
+			}
 		}
 		chord, _ := NewChord(note, chordIntervals)
 		chords = append(chords, *chord)

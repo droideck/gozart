@@ -5,6 +5,7 @@ import (
 	"reflect"
 )
 
+// TODO: Add print chord method
 type Chord struct {
 	key     Note
 	quality Quality
@@ -37,14 +38,14 @@ var ChordQualities = []Quality{
 	{"minor sixth", "mi6", []int{3, 7, 9}},
 	{"major ninth", "ma9", []int{4, 7, 11, 14}},
 	{"minor ninth", "mi9", []int{3, 7, 10, 14}},
-	{"minor 7b9", "m7b9", []int{3, 7, 10, 13}},
-	{"minor 7b5b9", "m7b5b9", []int{3, 6, 10, 13}},
-	{"dominant 9th", "9", []int{4, 7, 10, 14}},
-	{"dominant minor 9th", "7b9", []int{4, 7, 10, 13}},
-	{"dominant 7#9", "7#9", []int{4, 7, 10, 15}},
-	{"dominant 11th", "11", []int{4, 7, 10, 14, 17}},
-	{"major 11th", "M11", []int{4, 7, 11, 14, 18}},
-	{"minor 11th", "m11", []int{3, 7, 10, 14, 17}},
+	{"minor seventh (flat nine)", "mi7b9", []int{3, 7, 10, 13}},
+	{"minor seventh (flat five, flat nine)", "mi7b5b9", []int{3, 6, 10, 13}},
+	{"dominant nineth", "9", []int{4, 7, 10, 14}},
+	{"dominant seventh (flat nine)", "7b9", []int{4, 7, 10, 13}},
+	{"dominant seventh (sharp nine)", "7#9", []int{4, 7, 10, 15}},
+	{"dominant eleventh", "11", []int{4, 7, 10, 14, 17}},
+	{"major eleventh", "ma11", []int{4, 7, 11, 14, 18}},
+	{"minor eleventh", "mi11", []int{3, 7, 10, 14, 17}},
 }
 
 func getChordQuality(value interface{}) (*Quality, error) {
