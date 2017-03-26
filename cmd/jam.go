@@ -16,9 +16,9 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"github.com/spf13/cobra"
 	"github.com/droideck/gozart/gozart"
+	"github.com/spf13/cobra"
+	"log"
 )
 
 var jamCmd = &cobra.Command{
@@ -44,7 +44,6 @@ By default it will show you diatonic chords without any extentions.`,
 		for _, note := range scale.Notes {
 			notes += note.FullName + " "
 		}
-		fmt.Println(notes)
 
 		diatonicChords, err := scale.FindDiatonicChords("")
 		if err != nil {
@@ -58,9 +57,14 @@ By default it will show you diatonic chords without any extentions.`,
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(diatonicChords)
-		fmt.Println(diatonicChords7)
-		fmt.Println(diatonicChords9)
+		fmt.Println("Scale:", ScaleName, Key)
+		fmt.Println("Scale notes:", notes)
+		fmt.Println("Diatonic triads")
+		gozart.PrintDiatonicChords(diatonicChords)
+		fmt.Println("Diatonic seventh chords")
+		gozart.PrintDiatonicChords(diatonicChords7)
+		fmt.Println("Diatonic ninth chords")
+		gozart.PrintDiatonicChords(diatonicChords9)
 	},
 }
 

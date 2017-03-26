@@ -43,6 +43,10 @@ var ChordQualities = []Quality{
 	{"dominant nineth", "9", []int{4, 7, 10, 14}},
 	{"dominant seventh (flat nine)", "7b9", []int{4, 7, 10, 13}},
 	{"dominant seventh (sharp nine)", "7#9", []int{4, 7, 10, 15}},
+	{"minor (major ninth)", "mi(ma9)", []int{3, 7, 11, 14}},
+	{"augmented major ninth", "+ma9", []int{4, 8, 11, 14}},
+	{"major seventh (sharp nine)", "ma7#9", []int{4, 7, 11, 15}},
+	{"diminished ninth", "dim9", []int{3, 6, 9, 13}},
 	{"dominant eleventh", "11", []int{4, 7, 10, 14, 17}},
 	{"major eleventh", "ma11", []int{4, 7, 11, 14, 18}},
 	{"minor eleventh", "mi11", []int{3, 7, 10, 14, 17}},
@@ -64,6 +68,15 @@ func getChordQuality(value interface{}) (*Quality, error) {
 		}
 	}
 	return nil, fmt.Errorf("Chord quality is not found: %s", value)
+}
+
+func (ch Chord) Sprint() string {
+	var notes string = ch.Notes[0].FullName
+
+	for _, note := range ch.Notes[1:] {
+		notes += " " + note.FullName
+	}
+	return fmt.Sprintf("%s%s [%s]", ch.key.FullName, ch.quality.suffix, notes)
 }
 
 func NewChord(key Note, quality interface{}) (*Chord, error) {

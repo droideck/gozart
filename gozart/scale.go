@@ -56,7 +56,7 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 			var nextChordNote Note
 
 			// Work out the Notes range overflow
-			if j + i > 7 {
+			if j+i > 7 {
 				nextChordNote = s.Notes[j+i-7]
 			} else {
 				nextChordNote = s.Notes[j+i]
@@ -71,7 +71,7 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 			if i < 7 {
 				chordIntervals = append(chordIntervals, interval)
 			} else {
-				chordIntervals = append(chordIntervals, interval + 12)
+				chordIntervals = append(chordIntervals, interval+12)
 			}
 		}
 		chord, _ := NewChord(note, chordIntervals)
@@ -79,6 +79,48 @@ func (s *Scale) FindDiatonicChords(extended string) ([]Chord, error) {
 	}
 
 	return chords, nil
+}
+
+func PrintDiatonicChords(chords []Chord) {
+	var minor bool = false
+	var num string
+
+	if chords[0].quality.name[:5] == "minor" {
+		minor = true
+	}
+	for i, chord := range chords {
+		schord := chord.Sprint()
+		switch i {
+		case 0:
+			num = "I"
+		case 1:
+			num = "II"
+		case 2:
+			if minor {
+				num = "bIII"
+			} else {
+				num = "III"
+			}
+		case 3:
+			num = "IV"
+		case 4:
+			num = "V"
+		case 5:
+			if minor {
+				num = "bVI"
+			} else {
+				num = "VI"
+			}
+		case 6:
+			if minor {
+				num = "bVII"
+			} else {
+				num = "VII"
+			}
+		}
+		fmt.Printf("%s%s: %s   ", num, chord.quality.suffix, schord)
+	}
+	fmt.Println()
 }
 
 func majorScale(key *Note) *Scale {
