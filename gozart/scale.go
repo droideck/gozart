@@ -11,21 +11,14 @@ type Scale struct {
 	Notes     []Note
 }
 
-var Mode string = "ionian"
-
-var modeIntervals = map[string][]int{
-	"ionian":     {2, 2, 1, 2, 2, 2, 1},
-	"dorian":     {2, 1, 2, 2, 2, 1, 2},
-	"phrygian":   {1, 2, 2, 2, 1, 2, 2},
-	"lydian":     {2, 2, 2, 1, 2, 2, 1},
-	"mixolydian": {2, 2, 1, 2, 2, 1, 2},
-	"aeolian":    {2, 1, 2, 2, 1, 2, 2},
-	"locryan":    {1, 2, 2, 1, 2, 2, 2},
-}
-
 var scales = map[string]func(*Note) *Scale{
 	"chromatic":        chromaticScale,
 	"major":            majorScale,
+	"dorian":           dorianScale,
+	"phrygian":         phrygianScale,
+	"lydian":           lydianScale,
+	"mixolydian":       mixolydianScale,
+	"locryan":          locryanScale,
 	"natural minor":    naturalMinorScale,
 	"harmonic minor":   harmonicMinorScale,
 	"melodic minor":    melodicMinorScale,
@@ -124,25 +117,84 @@ func PrintDiatonicChords(chords []Chord) {
 }
 
 func majorScale(key *Note) *Scale {
-	var naturalDirections map[string]int
 	name := "major"
-	intervals := modeIntervals[Mode]
-	switch Mode {
-	case "ionian":
-		naturalDirections = map[string]int{"C": 0, "D": 0, "E": 0, "F": -1, "G": 0, "A": 0, "B": 0}
-	case "dorian":
-		naturalDirections = map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
-	case "phrygian":
-		naturalDirections = map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": -1, "B": 0}
-	case "lydian":
-		naturalDirections = map[string]int{"C": 0, "D": 0, "E": 0, "F": 0, "G": 0, "A": 0, "B": 0}
-	case "mixolydian":
-		naturalDirections = map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": 0, "A": 0, "B": 0}
-	case "aeolian":
-		naturalDirections = map[string]int{"C": -1, "D": -1, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
-	case "locryan":
-		naturalDirections = map[string]int{"C": -1, "D": -1, "E": -1, "F": -1, "G": -1, "A": -1, "B": 0}
+	intervals := []int{2, 2, 1, 2, 2, 2, 1}
+	naturalDirections := map[string]int{"C": 0, "D": 0, "E": 0, "F": -1, "G": 0, "A": 0, "B": 0}
+	notes := fillScaleNotes(key, intervals)
+	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
 	}
+}
+
+func dorianScale(key *Note) *Scale {
+	name := "dorian"
+	intervals := []int{2, 1, 2, 2, 2, 1, 2}
+	naturalDirections := map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": 0, "B": 0}
+	notes := fillScaleNotes(key, intervals)
+	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func phrygianScale(key *Note) *Scale {
+	name := "phrygian"
+	intervals := []int{1, 2, 2, 2, 1, 2, 2}
+	naturalDirections := map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": -1, "A": -1, "B": 0}
+	notes := fillScaleNotes(key, intervals)
+	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func lydianScale(key *Note) *Scale {
+	name := "lydian"
+	intervals := []int{2, 2, 2, 1, 2, 2, 1}
+	naturalDirections := map[string]int{"C": 0, "D": 0, "E": 0, "F": 0, "G": 0, "A": 0, "B": 0}
+	notes := fillScaleNotes(key, intervals)
+	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func mixolydianScale(key *Note) *Scale {
+	name := "mixolydian"
+	intervals := []int{2, 2, 1, 2, 2, 1, 2}
+	naturalDirections := map[string]int{"C": -1, "D": 0, "E": 0, "F": -1, "G": 0, "A": 0, "B": 0}
+	notes := fillScaleNotes(key, intervals)
+	reworkScaleNotes(notes, naturalDirections)
+
+	return &Scale{
+		name:      name,
+		key:       *key,
+		intervals: intervals,
+		Notes:     notes,
+	}
+}
+
+func locryanScale(key *Note) *Scale {
+	name := "locryan"
+	intervals := []int{1, 2, 2, 1, 2, 2, 2}
+	naturalDirections := map[string]int{"C": -1, "D": -1, "E": -1, "F": -1, "G": -1, "A": -1, "B": 0}
 	notes := fillScaleNotes(key, intervals)
 	reworkScaleNotes(notes, naturalDirections)
 
@@ -319,10 +371,6 @@ func fillScaleNotes(key *Note, intervals []int) []Note {
 }
 
 func NewScale(name string, key *Note) (*Scale, error) {
-	if _, ok := modeIntervals[Mode]; !ok {
-		return nil, fmt.Errorf("Scale mode %s is not found", Mode)
-	}
-
 	if scale, ok := scales[name]; ok {
 		return scale(key), nil
 	} else {
